@@ -10,7 +10,7 @@ export class CustomersService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  async getCustomers(queryParams: FilterCustomers): Promise<Customer[]> {
+  async getCustomers(queryParams: FilterCustomers): Promise<FilterCustomers[]> {
     let customers = await this.customerRepository.find();
 
     // how to check if all object keys has false values
@@ -18,20 +18,19 @@ export class CustomersService {
 
     if (!isFalse) {
       customers = await this.customerRepository.find({
-        where: [
-          {
-            name: Like(`%${queryParams.name}%`),
-          },
-          {
-            age: queryParams.age,
-          },
-          {
-            email: Like(`%${queryParams.email}%`),
-          },
-          {
-            work: Like(`%${queryParams.work}%`),
-          },
-        ],
+        where: {
+          name: Like(`%${queryParams.name}%`),
+          age: queryParams.age,
+          email: Like(`%${queryParams.email}%`),
+          work: Like(`%${queryParams.work}%`),
+        },
+      });
+
+      console.log({
+        name: Like(`%${queryParams.name}%`),
+        age: queryParams.age,
+        email: Like(`%${queryParams.email}%`),
+        work: Like(`%${queryParams.work}%`),
       });
     }
 
