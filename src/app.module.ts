@@ -13,7 +13,7 @@ import { Customer } from './entity/customer/customer.entity';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '',
+      password: 'postgres',
       database: 'nest-divit',
       entities: [Customer], // Specify your entities here
       synchronize: true, // Set to false in production

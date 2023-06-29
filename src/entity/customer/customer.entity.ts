@@ -17,3 +17,10 @@ export class Customer {
   @Column('varchar', { nullable: true, name: 'email' })
   email?: string;
 }
+
+export interface FilterCustomers {
+  name?: string;
+  age?: string;
+  work?: string;
+  email?: string;
+}

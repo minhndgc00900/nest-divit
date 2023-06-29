@@ -13,20 +13,13 @@ export class CustomersService {
 
   customers = BOOKS;
 
-  getCustomers(): Promise<any> {
-    return new Promise((resolve) => {
-      resolve(this.customers);
-    });
+  async getCustomers(): Promise<Customer[]> {
+    return this.customerRepository.find();
   }
 
-  getCustomer(cusId: string): Promise<any> {
-    const id = Number(cusId);
-    return new Promise((resolve) => {
-      const customer = this.customers.find((customer) => customer.id === id);
-      if (!customer) {
-        throw new HttpException('Book does not exist', 404);
-      }
-      resolve(customer);
+  async getCustomer(cusId: number): Promise<Customer> {
+    return this.customerRepository.findOneBy({
+      id: cusId,
     });
   }
 
