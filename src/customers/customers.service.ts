@@ -12,13 +12,24 @@ export class CustomersService {
 
   async getCustomers(queryParams: FilterCustomers): Promise<Customer[]> {
     let customers = await this.customerRepository.find();
-    console.log(23, queryParams);
 
-    if (queryParams) {
+    // how to check if all object keys has false values
+    const isFalse = Object.keys(queryParams).every((k) => !queryParams[k]);
+
+    if (!isFalse) {
       customers = await this.customerRepository.find({
         where: [
           {
             name: Like(`%${queryParams.name}%`),
+          },
+          {
+            age: queryParams.age,
+          },
+          {
+            email: Like(`%${queryParams.email}%`),
+          },
+          {
+            work: Like(`%${queryParams.work}%`),
           },
         ],
       });
@@ -35,7 +46,7 @@ export class CustomersService {
 
   async addCustomer(
     name: string,
-    age: string,
+    age: number,
     email: string,
     work: string,
   ): Promise<Customer> {
@@ -45,7 +56,7 @@ export class CustomersService {
 
   async editCustomer(
     id: number,
-    age: string,
+    age: number,
     email: string,
     work: string,
   ): Promise<Customer> {

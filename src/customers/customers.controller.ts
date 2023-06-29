@@ -18,7 +18,7 @@ export class CustomersController {
   @Get()
   async getCustomers(
     @Query('name') name: string,
-    @Query('age') age: string,
+    @Query('age') age: number,
     @Query('work') work: string,
     @Query('email') email: string,
   ) {

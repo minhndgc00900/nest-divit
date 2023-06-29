@@ -8,8 +8,8 @@ export class Customer {
   @Column('varchar', { nullable: false, length: 255, name: 'title' })
   name!: string;
 
-  @Column('varchar', { nullable: true, name: 'age' })
-  age?: string;
+  @Column('integer', { nullable: true, name: 'age' })
+  age?: number;
 
   @Column('varchar', { nullable: true, name: 'work' })
   work?: string;
@@ -20,7 +20,7 @@ export class Customer {
 
 export interface FilterCustomers {
   name?: string;
-  age?: string;
+  age?: number;
   work?: string;
   email?: string;
 }
