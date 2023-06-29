@@ -5,6 +5,8 @@ import {
   InternalServerErrorException,
   Param,
   Post,
+  Put,
+  Query,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
@@ -14,8 +16,18 @@ export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
   @Get()
-  async getCustomers() {
-    const customers = await this.customersService.getCustomers();
+  async getCustomers(
+    @Query('name') name: string,
+    @Query('age') age: string,
+    @Query('work') work: string,
+    @Query('email') email: string,
+  ) {
+    const customers = await this.customersService.getCustomers({
+      name,
+      age,
+      work,
+      email,
+    });
     return customers;
   }
 
@@ -39,5 +51,21 @@ export class CustomersController {
     }
 
     return { id: newCustomer.id };
+  }
+
+  @Put()
+  async editCustomer(@Body() createCustomerDTO: CreateCustomerDTO) {
+    const updatedCustomer = await this.customersService.editCustomer(
+      createCustomerDTO.id,
+      createCustomerDTO.age,
+      createCustomerDTO.email,
+      createCustomerDTO.work,
+    );
+
+    if (!updatedCustomer.id) {
+      throw new InternalServerErrorException('NotUpdatedData');
+    }
+
+    return { id: updatedCustomer.id };
   }
 }

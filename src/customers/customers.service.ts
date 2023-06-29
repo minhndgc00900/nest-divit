@@ -1,8 +1,7 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Customer } from 'src/entity/customer/customer.entity';
-import { BOOKS } from 'src/mocks/books.mock';
-import { Repository } from 'typeorm';
+import { Customer, FilterCustomers } from 'src/entity/customer/customer.entity';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class CustomersService {
@@ -11,10 +10,21 @@ export class CustomersService {
     private customerRepository: Repository<Customer>,
   ) {}
 
-  customers = BOOKS;
+  async getCustomers(queryParams: FilterCustomers): Promise<Customer[]> {
+    let customers = await this.customerRepository.find();
+    console.log(23, queryParams);
 
-  async getCustomers(): Promise<Customer[]> {
-    return this.customerRepository.find();
+    if (queryParams) {
+      customers = await this.customerRepository.find({
+        where: [
+          {
+            name: Like(`%${queryParams.name}%`),
+          },
+        ],
+      });
+    }
+
+    return customers;
   }
 
   async getCustomer(cusId: number): Promise<Customer> {
@@ -33,15 +43,12 @@ export class CustomersService {
     return this.customerRepository.save(customer);
   }
 
-  deleteCustomer(cusId): Promise<any> {
-    const id = Number(cusId);
-    return new Promise((resolve) => {
-      const index = this.customers.findIndex((customer) => customer.id === id);
-      if (index === -1) {
-        throw new HttpException('Customer does not exist', 404);
-      }
-      this.customers.splice(1, index);
-      resolve(this.customers);
-    });
+  async editCustomer(
+    id: number,
+    age: string,
+    email: string,
+    work: string,
+  ): Promise<Customer> {
+    return this.customerRepository.save({ id, age, email, work });
   }
 }
