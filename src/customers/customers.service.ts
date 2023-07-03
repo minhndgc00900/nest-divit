@@ -10,9 +10,12 @@ export class CustomersService {
   constructor(
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
+
+    @InjectRepository(Photo)
+    private photoRepository: Repository<Photo>,
   ) {}
 
-  async getCustomers(queryParams: FilterCustomers): Promise<FilterCustomers[]> {
+  async getCustomers(queryParams: FilterCustomers): Promise<Customer[]> {
     let filters = {};
     const { name, age, email, work } = queryParams;
 
@@ -34,6 +37,9 @@ export class CustomersService {
 
     const customers = await this.customerRepository.find({
       where: filters,
+      relations: {
+        photos: true,
+      },
     });
 
     return customers;
@@ -50,11 +56,25 @@ export class CustomersService {
     age: number,
     email: string,
     work: string,
-    photos: Photo[],
+    photo: string,
   ): Promise<Customer> {
-    const customer = this.customerRepository.create({ name, age, email, work });
-    customer.photos = photos;
-    return this.customerRepository.save(customer);
+    console.log(photo);
+
+    const newCustomer = await this.customerRepository.save({
+      name,
+      age,
+      email,
+      work,
+    });
+
+    const newPhoto = await this.photoRepository.save({
+      url: photo,
+      customerId: newCustomer.id,
+    });
+
+    newCustomer.photos = [newPhoto];
+
+    return this.customerRepository.save(newCustomer);
   }
 
   async editCustomer(

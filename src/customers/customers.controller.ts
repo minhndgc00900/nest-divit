@@ -45,7 +45,7 @@ export class CustomersController {
       createCustomerDTO.age,
       createCustomerDTO.email,
       createCustomerDTO.work,
-      createCustomerDTO.photos,
+      createCustomerDTO.photo,
     );
 
     if (!newCustomer.id) {

@@ -6,5 +6,5 @@ export class CreateCustomerDTO {
   readonly age: number;
   readonly work: string;
   readonly email: string;
-  readonly photos: Photo[];
+  readonly photo: string;
 }

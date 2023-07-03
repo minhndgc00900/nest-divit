@@ -1,7 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Customer } from '../customers/customer.entity';
 
-@Entity()
+@Entity('photo')
 export class Photo {
   @PrimaryGeneratedColumn()
   id: number;
@@ -9,6 +15,10 @@ export class Photo {
   @Column()
   url: string;
 
-  @ManyToOne(() => Customer, (customer: Customer) => customer.photos)
+  @Column()
+  customerId: number;
+
+  @OneToOne(() => Customer, (customer: Customer) => customer.photos)
+  @JoinColumn({ name: 'customerId' })
   customer: Customer;
 }
