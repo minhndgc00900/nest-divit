@@ -8,6 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { Photo } from 'src/photo/photo.entity';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 
@@ -44,6 +45,7 @@ export class CustomersController {
       createCustomerDTO.age,
       createCustomerDTO.email,
       createCustomerDTO.work,
+      createCustomerDTO.photos,
     );
 
     if (!newCustomer.id) {

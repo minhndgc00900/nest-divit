@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Photo } from '../photo/photo.entity';
 
 @Entity('customer')
 export class Customer {
@@ -16,6 +17,9 @@ export class Customer {
 
   @Column('varchar', { nullable: true, name: 'email' })
   email?: string;
+
+  @OneToMany(() => Photo, (photo: Photo) => photo.customer)
+  photos?: Photo[];
 }
 
 export interface FilterCustomers {

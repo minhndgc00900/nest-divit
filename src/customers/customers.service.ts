@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Customer, FilterCustomers } from 'src/entity/customer/customer.entity';
 import { Like, Repository } from 'typeorm';
 import { _ } from 'lodash';
+import { Customer, FilterCustomers } from './customer.entity';
+import { Photo } from 'src/photo/photo.entity';
 
 @Injectable()
 export class CustomersService {
@@ -20,7 +21,7 @@ export class CustomersService {
     }
 
     if (age) {
-      filters = { ...filters, age: age };
+      filters = { ...filters, age };
     }
 
     if (email) {
@@ -49,8 +50,10 @@ export class CustomersService {
     age: number,
     email: string,
     work: string,
+    photos: Photo[],
   ): Promise<Customer> {
     const customer = this.customerRepository.create({ name, age, email, work });
+    customer.photos = photos;
     return this.customerRepository.save(customer);
   }
 
