@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer, FilterCustomers } from 'src/entity/customer/customer.entity';
 import { Like, Repository } from 'typeorm';
+import { _ } from 'lodash';
 
 @Injectable()
 export class CustomersService {
@@ -11,28 +12,28 @@ export class CustomersService {
   ) {}
 
   async getCustomers(queryParams: FilterCustomers): Promise<FilterCustomers[]> {
-    let customers = await this.customerRepository.find();
+    let filters = {};
+    const { name, age, email, work } = queryParams;
 
-    // how to check if all object keys has false values
-    const isFalse = Object.keys(queryParams).every((k) => !queryParams[k]);
-
-    if (!isFalse) {
-      customers = await this.customerRepository.find({
-        where: {
-          name: Like(`%${queryParams.name}%`),
-          age: queryParams.age,
-          email: Like(`%${queryParams.email}%`),
-          work: Like(`%${queryParams.work}%`),
-        },
-      });
-
-      console.log({
-        name: Like(`%${queryParams.name}%`),
-        age: queryParams.age,
-        email: Like(`%${queryParams.email}%`),
-        work: Like(`%${queryParams.work}%`),
-      });
+    if (name) {
+      filters = { ...filters, name: Like(`%${name}%`) };
     }
+
+    if (age) {
+      filters = { ...filters, age: age };
+    }
+
+    if (email) {
+      filters = { ...filters, email: Like(`%${email}%`) };
+    }
+
+    if (work) {
+      filters = { ...filters, work: Like(`%${work}%`) };
+    }
+
+    const customers = await this.customerRepository.find({
+      where: filters,
+    });
 
     return customers;
   }
